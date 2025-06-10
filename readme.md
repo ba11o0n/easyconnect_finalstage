@@ -1,4 +1,5 @@
 # EasyConnect Software Repository Overview 
+```
 
 ├── README.MD                     # Project overview and instructions
 ├── authapp                       # Handles authentication logic
@@ -23,7 +24,7 @@
 │   ├── auth                      # Login/signup templates
 │   └── main                      # Dashboards, event views, etc.
 └── test_mqtt_publish.py          # MQTT publishing test script
-
+```
 
 ### Software Objectives 
 * Facilitates user registration with role-specific dashboards (Attendee, Host, Employee)
