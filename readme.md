@@ -90,7 +90,8 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 ##### 4. Start the Server 
-```python manage.py runserver
+```python 
+manage.py runserver
 ```
 
 ### MQTT Broker Configuration
