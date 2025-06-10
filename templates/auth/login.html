@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Sign in{% endblock %}
+
+{% load static %} 
+
+{% block content %}
+
+  <header class="navbar">
+    <div class="logo">EasyConnect</div>
+    <nav class="nav-links">
+      <a href="{% url 'home' %}">Home</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1 class="hero-title">Welcome Back</h1>
+    <p class="hero-subtitle">Log in to continue connecting at your events.</p>
+
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <form method="POST" action="{% url 'login' %}">
+    {% csrf_token %}
+    <div class="glass-card" data-aos="fade-up" data-aos-delay="150">
+      <input name="email" type="email" class="form-input large" placeholder="Email Address" />
+      <input name="password" type="password" class="form-input large" placeholder="Password" />
+      <button class="glow-button" onclick="validateForm()">Log In</button>
+    </form>
+
+      <p class="auth-redirect">New to EasyConnect?
+        <a href="{% url 'signup' %}">Create an account</a>
+      </p>
+    </div>
+      
+  </section>
+
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>AOS.init();</script>
+  <script type="module" src="{% static '/js/login.js' %}"></script>
+
+{% endblock %}

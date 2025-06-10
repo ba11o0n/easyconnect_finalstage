@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Employee Dashboard{% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+  <header class="navbar">
+    <div class="logo">EasyConnect Employee</div>
+    <nav class="nav-links">
+      <a href="{% url 'home' %}">Home</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'logout' %}">Logout</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <section class="hero" data-aos="fade-up" style="background: linear-gradient(to right, #f0f4ff, #ffffff); padding: 2rem 1rem;">
+
+    <h1 class="hero-title">Welcome, Employee</h1>
+    <p class="hero-subtitle">Join an event and manage your check-ins.</p>
+
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <!-- Join Event Code Form -->
+    <div class="glass-card" data-aos="zoom-in-up">
+      <h2>Join an Event</h2>
+      <form method="post" action="{% url 'join_event_employee' %}">
+        {% csrf_token %}
+        <input type="text" class="form-input large" name="event_code" placeholder="Enter Event Code" required />
+        <button class="glow-button" type="submit">Join Event</button>
+      </form>
+    </div>
+
+    <!-- Upcoming Events -->
+    <div class="glass-card" data-aos="fade-up">
+      <h2>Upcoming Events</h2>
+      {% if upcoming_events %}
+        <ul>
+          {% for event in upcoming_events %}
+            <li>
+              <strong>{{ event.name }}</strong> on {{ event.date|date:"M j, Y \\a\\t g:i A" }} in {{ event.location }}
+              <a class="see-more" href="{% url 'scanner_view' %}">Open Scanner</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No upcoming events.</p>
+      {% endif %}
+    </div>
+
+    <!-- Past Events -->
+    <div class="glass-card" data-aos="fade-up">
+      <h2>Past Events</h2>
+      {% if past_events %}
+        <ul>
+          {% for event in past_events %}
+            <li>
+              <strong>{{ event.name }}</strong> - {{ event.date }} at {{ event.location }}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No past events.</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <script type="module" src="{% static 'js/dashboard-employee.js' %}"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>AOS.init();</script>
+
+{% endblock %}
+
+

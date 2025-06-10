@@ -1,0 +1,17 @@
+# Ignore Python virtual environments
+venv/
+.env/
+__pycache__/
+
+# macOS system files
+.DS_Store
+
+# VS Code settings
+.vscode/
+
+# Log files
+*.log
+
+# Personal or sensitive files
+*.env
+media/

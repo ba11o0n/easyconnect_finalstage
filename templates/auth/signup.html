@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Sign up{% endblock %}
+
+{% load static %} 
+
+{% block content %}
+
+  <header class="navbar">
+    <div class="logo">EasyConnect</div>
+    <nav class="nav-links">
+      <a href="{% url 'home' %}">Home</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1 class="hero-title">Create an Account</h1>
+    <p class="hero-subtitle">Sign up and start building your professional network.</p>
+
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <form method="POST" action="{% url 'signup' %}">
+      {% csrf_token %}
+      <div class="glass-card" data-aos="fade-up" data-aos-delay="150">
+      <input type="text" class="form-input large" placeholder="Full Name" name="full_name" />
+      <input type="email" class="form-input large" placeholder="Email Address"  name="email"/>
+      <input type="password" class="form-input large" placeholder="Create Password" name="password" />
+      
+      <select id="user-role" class="form-input large" name="role">
+        <option value="" disabled selected>Select your role</option>
+        <option value="attendee">Attendee: General event participant</option>
+        <option value="employee">Employee: Booth or service provider</option>
+        <option value="admin">Admin: Booth or service provider</option>
+      </select>
+      
+      <button class="glow-button" onclick="validateForm()">Sign Up</button>
+
+    </form>
+
+      <p class="auth-redirect">Already have an account?
+        <a href="{% url 'login' %}">Log in here</a>
+      </p>
+    </div>
+  </section>
+
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script type="module" src="{% static 'js/signup.js' %}"></script>
+  <script>AOS.init();</script>
+
+{% endblock %}

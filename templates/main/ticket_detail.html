@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Ticket Details{% endblock %}
+
+{% block content %}
+  <header class="navbar">
+    <div class="logo">EasyConnect Attendee</div>
+    <nav class="nav-links">
+      <a href="{% url 'attendee' %}">Back to Dashboard</a>
+    </nav>
+  </header>
+
+  <section class="hero" style="background: linear-gradient(to right, #f0f4ff, #ffffff); padding: 2rem 1rem;">
+    <div class="glass-card">
+      <h2>{{ ticket.event_name }}</h2>
+      <p><strong>Date:</strong> {{ ticket.event_date|date:'Y-m-d H:i' }}</p>
+      {% if event %}
+      <p><strong>Location:</strong> {{ event.location }}</p>
+      {% endif %}
+      <div id="qrcode" style="display: flex; justify-content: center; align-items: center; min-height: 200px; margin: 2rem 0;"></div>    </div>
+  </section>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    new QRCode(document.getElementById("qrcode"), "{{ ticket.ticket_id }}");
+  </script>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Create Event{% endblock %}
+{% load static %} 
+{% block content %}
+
+  <header class="navbar">
+    <div class="logo">EasyConnect Attendee</div>
+    <nav class="nav-links">
+      <a href="{% url 'home' %}">Home</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'logout' %}">Logout</a>
+      {% endif %}
+      <a href="{% url 'admin' %}" onclick="toggleRegisterForm()">Back to Dashboard</a>
+    </nav>
+  </header>
+
+  <section class="hero" data-aos="fade-up" style="background: linear-gradient(to right, #f0f4ff, #ffffff); padding: 2rem 1rem;">
+ <div class="glass-card" style="color: black">
+    <h1>Create Event</h1>
+
+<form method="post">
+  {% csrf_token %}
+  <label>Name:<input type="text" name="name"></label><br>
+  <label>Description:<textarea name="description"></textarea></label><br>
+  <label>Date:<input type="date" name="date"></label><br>
+  <label>Time:<input type="time" name="time"></label><br>
+  <label>Location:<input type="text" name="location"></label><br>
+  <button type="submit" class="see-more">Create</button>
+</form>
+</div>
+
+  </section>
+
+  <script type="module" src="{% static 'js/attendee-admin.js' %}"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>AOS.init();</script>
+
+{% endblock %}

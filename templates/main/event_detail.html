@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Event Details{% endblock %}
+
+{% block content %}
+  <header class="navbar">
+    <div class="logo">EasyConnect Admin</div>
+    <nav class="nav-links">
+      <a href="{% url 'admin' %}">Back to Dashboard</a>
+    </nav>
+  </header>
+
+  <section class="hero" style="background: linear-gradient(to right, #f0f4ff, #ffffff); padding: 2rem 1rem;">
+    <div class="glass-card" style="color: black">
+      <h2>{{ event.name }}</h2>
+      <p><strong>Date:</strong> {{ event.date }} {{ event.time }}</p>
+      <p><strong>Location:</strong> {{ event.location }}</p>
+      <p><strong>Attendee GA Code:</strong> {{ event.attendee_GA_code }}</p>
+      <p><strong>Attendee VIP Code:</strong> {{ event.attendee_VIP_code }}</p>
+      <p><strong>Employee Code:</strong> {{ event.employee_code }}</p>
+    </div>
+    <div class="glass-card" style="color: black">
+      <h2>Metrics</h2>
+      <div>
+        <canvas id="myChart"></canvas>
+      </div>
+    </div>
+  </section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+const ctx = document.getElementById('myChart');
+const interactions = {{interactions_count}};
+const attendees = {{attendee_count}};
+
+const maxData = Math.max(interactions, attendees);
+const yAxisMax = maxData < 10 ? 10 : undefined; // Use 10 if data is small, else auto
+
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Total Interactions', 'Total Attendees'],
+      datasets: [{
+        label: 'Engagement Overview',
+        data: [interactions, attendees],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+        ],
+        borderColor: [
+          'rgb(255, 99, 132)',
+          'rgb(255, 159, 64)',
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: yAxisMax
+        }
+      }
+    }
+  });
+
+</script>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Your Profile{% endblock %}
+{% load static %}
+{% block content %}
+<header class="navbar">
+  <div class="logo">EasyConnect Attendee</div>
+  <nav class="nav-links">
+    <a href="{% url 'attendee_dashboard' %}">Dashboard</a>
+    <a href="{% url 'logout' %}">Logout</a>
+  </nav>
+</header>
+<section class="hero">
+  <h1 class="hero-title">Your Profile</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="glass-card" style="align-items:center" data-aos="fade-up">
+      {% if profile.profile_picture %}
+        <img src="{{ profile.profile_picture.url }}" alt="Profile picture" style="max-width:150px;display:block;margin-bottom:1rem" />
+      {% endif %}
+      <input type="file" name="profile_picture" class="form-input large" />
+      <input type="text" class="form-input large" name="full_name" value="{{ request.user.full_name }}" placeholder="Full Name" required />
+      <input type="email" class="form-input large" value="{{ request.user.email }}" readonly />
+      <textarea class="form-input large" name="bio" placeholder="Bio">{{ profile.bio }}</textarea>
+      <input type="url" class="form-input large" name="linkedin" value="{{ profile.linkedin }}" placeholder="LinkedIn URL" />
+      <input type="url" class="form-input large" name="website" value="{{ profile.website }}" placeholder="Website URL" />
+      <button type="submit" class="glow-button">Save Changes</button>
+    </div>
+  </form>
+</section>
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script>AOS.init();</script>
+{% endblock %}

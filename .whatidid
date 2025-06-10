@@ -1,0 +1,15 @@
+- fixing general bugs
+- fix bug in mainapp.models using default user model instead of custom one
+- enable event creation and attendee sign-up with tickets
+- track employee event joins
+- push ticket IDs to devices over MQTT
+- generate new URLs and template for event creation
+- list real upcoming and past events in admin and employee templates not just hardcoded html
+- allow employees to join events with form data
+- add join event form for attendees
+- show attendee's upcoming and past events
+- ensure attendee views require login
+- add attendee profile page with picture upload
+- add qr code generator from ticket
+- qr code reader
+- user profile

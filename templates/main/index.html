@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load static %} 
+{% block content %}
+  <!-- Floating Blobs -->
+  <div class="bg-blobs">
+    <div class="blob purple"></div>
+    <div class="blob pink"></div>
+    <div class="blob blue"></div>
+  </div>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">EasyConnect</div>
+    <nav class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#features">Features</a>
+      <a href="#how">How It Works</a>
+
+      {% if user.is_authenticated %}
+        {% if user.role == 'admin' %}
+          <a href="{% url 'admin' %}">Dashboard</a>
+        {% elif user.role == 'employee' %}
+          <a href="{% url 'employee' %}">Dashboard</a>
+        {% elif user.role == 'attendee' %}
+          <a href="{% url 'attendee' %}">Dashboard</a>
+        {% endif %}
+        <a href="{% url 'logout' %}">Logout</a>
+      {% else %}
+        <a href="{% url 'login' %}" class="glow-button">Login</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero" data-aos="fade-up">
+    <h1 class="hero-title" data-aos="zoom-in">Effortless Networking<br>Through a Handshake</h1>
+    <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="200">
+      Instantly connect with others at events — no awkward exchanges, no business cards.<br>
+      Just a handshake and sync.
+    </p>
+    <div data-aos="fade-up" data-aos-delay="400">
+      <a href="#features" class="glow-button" style="max-width: 200px; display: inline-block;text-decoration:none">Explore Features</a>
+      <a href="{% url 'login' %}" class="glow-button" style="max-width: 200px; display: inline-block;text-decoration:none">Sign in</a>
+    </div>
+  </section>
+
+  <div data-aos="fade-up">
+    
+  <!-- About Page Section -->
+  <section id="about" class="about" data-aos="fade-up">
+    <h2 class="about-title">About EasyConnect</h2>
+    <div class>
+      <p style="font-size: 1.125rem;">
+        EasyConnect was founded with a vision to make networking at events intuitive, instant, and impactful. We believe that meaningful professional connections should happen seamlessly—without apps, QR codes, or awkward moments.
+        <br><br>
+        With our smart wearable tech, professionals, students, and businesses can interact through a natural gesture: the handshake. We strive to bridge the gap between the physical and digital world through thoughtful design and secure technology.
+        <br><br>
+        Our team is composed of passionate developers, engineers, and event specialists who are committed to redefining how people connect.
+      </p>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+   
+  <section id="features" class="about">
+    <h2 class="about-title">Core Features</h2>
+    <div class="glass-card">
+      <ul style="text-align: left; font-size: 1.125rem;">
+        <li>🤝 Smart wristband with NFC & BLE support</li>
+        <li>📇 Instantly shares professional profiles</li>
+        <li>📱 No app installation required</li>
+        <li>📊 Dashboard for vendors, organizers, and attendees</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section id="how" class="about">
+    <h2 class="about-title">How It Works</h2>
+    <div class="glass-card">
+      <ol style="text-align: left; font-size: 1.125rem;">
+        <li>1. Receive your EasyConnect wristband at the venue</li>
+        <li>2. Tap hands with another person wearing one</li>
+        <li>3. Instantly exchange contact and social details</li>
+        <li>4. View all connections from your dashboard</li>
+      </ol>
+    </div>
+  </section>
+</div>
+
+  <!-- Call to Action -->
+  <section id="cta" class="about" style="background: #dbeafe;" data-aos="fade-up">
+    <h2 class="about-title">Ready to Experience the Future of Networking?</h2>
+    <p class="about-text">Join us at your next event. It’s simple, smart, and seamless.</p>
+    <a href="{% url 'login' %}" class="glow-button" style="max-width: 220px; margin-top: 2rem; display: inline-block;text-decoration:none">Get Started</a>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    © 2025 EasyConnect. All rights reserved.
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="{% static 'js/main.js' %}"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init();
+  </script>
+{% endblock %}

@@ -1,0 +1,287 @@
+{% extends "base.html" %}
+
+{% block title %}Attendee Dashboard{% endblock %}
+
+{% load static %} 
+
+{% block content %}
+
+  <header class="navbar">
+    <div class="logo">EasyConnect Attendee</div>
+    <nav class="nav-links">
+      <a href="{% url 'home' %}">Home</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'logout' %}">Logout</a>
+      {% endif %}
+      <a href="{% url 'attendee_profile' %}">Profile</a>
+      <a href="#" onclick="toggleRegisterForm()">Register for Event</a>
+    </nav>
+  </header>
+
+  <section class="hero" data-aos="fade-up" style="background: linear-gradient(to right, #f0f4ff, #ffffff); padding: 2rem 1rem;">
+
+    <h1 class="hero-title">Your Events</h1>
+    <p class="hero-subtitle">See the events you're attending and your past connections.</p>
+
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <!-- Join Event Form -->
+    <div class="glass-card" data-aos="zoom-in-up">
+      <h2>Join an Event</h2>
+      <form method="post" action="{% url 'join_event' %}">
+        {% csrf_token %}
+        <input type="text" class="form-input large" name="event_code" placeholder="Enter Event Code" required />
+        <button class="glow-button" type="submit">Join Event</button>
+      </form>
+    </div>
+
+    <!-- Register Form -->
+    <div id="register-form" class="glass-card" style="display:none;" data-aos="zoom-in-up">
+      <h2> Register for an Event</h2>
+      <input type="text" class="form-input large" placeholder="Your Name (optional)" />
+      <input type="email" class="form-input large" placeholder="Email (optional)" />
+      <input type="url" class="form-input large" placeholder="LinkedIn (optional)" />
+      <input type="url" class="form-input large" placeholder="Personal Website (optional)" />
+      <button class="glow-button" onclick="alert('Registered!')">Submit</button>
+    </div>
+
+    <!-- Event Cards -->
+    <div class="glass-card" data-aos="fade-up">
+      <h2>Upcoming Events</h2>
+      {% if upcoming_events %}
+        <ul>
+          {% for ticket in upcoming_events %}
+            <li>
+              <a href="{% url 'ticket_detail' ticket.ticket_id %}">
+                <strong>{{ ticket.event_name }}</strong> on {{ ticket.event_date|date:"F j, Y \\a\\t g:i A" }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No upcoming events.</p>
+      {% endif %}
+    </div>
+
+    <div class="glass-card" data-aos="fade-up">
+      <h2>Past Events</h2>
+      {% if past_events %}
+        <ul>
+          {% for ticket in past_events %}
+            <li>
+              <a href="{% url 'ticket_detail' ticket.ticket_id %}">
+                <strong>{{ ticket.event_name }}</strong> - {{ ticket.event_date|date:'Y-m-d H:i' }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No past events.</p>
+      {% endif %}
+    </div>
+
+    <!-- Your Connections -->
+    <div class="glass-card" data-aos="fade-up">
+      <h2>Your Connections</h2>
+      {% if connections %}
+        <div class="connections-list">
+          {% for connection in connections %}
+            <div class="connection-card" onclick="toggleConnection(this)">
+              <div class="connection-header">
+                <div class="connection-avatar">
+                  {% if connection.profile.profile_picture %}
+                    <img src="{{ connection.profile.profile_picture.url }}" alt="{{ connection.user.first_name }}" />
+                  {% else %}
+                    <div class="avatar-placeholder">{{ connection.user.first_name|first|upper }}{{ connection.user.last_name|first|upper }}</div>
+                  {% endif %}
+                </div>
+                <div class="connection-info">
+                  <h3>{{ connection.user.first_name }} {{ connection.user.last_name }}</h3>
+                  <p class="event-tag">Event: {{ connection.event_id }}</p>
+                </div>
+                <div class="expand-icon">▼</div>
+              </div>
+              
+              <div class="connection-details" style="display: none;">
+                {% if connection.profile.bio %}
+                  <p><strong>About:</strong> {{ connection.profile.bio }}</p>
+                {% endif %}
+                
+                <div class="connection-links">
+                  {% if connection.profile.linkedin %}
+                    <a href="{{ connection.profile.linkedin }}" target="_blank" class="social-link linkedin">
+                      LinkedIn
+                    </a>
+                  {% endif %}
+                  {% if connection.profile.website %}
+                    <a href="{{ connection.profile.website }}" target="_blank" class="social-link website">
+                      Website
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p>No connections yet. Start networking!</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <style>
+    .connections-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .connection-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .connection-card:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .connection-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .connection-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .connection-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar-placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .connection-info {
+      flex: 1;
+    }
+
+    .connection-info h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: #333;
+    }
+
+    .event-tag {
+      margin: 0.25rem 0 0 0;
+      font-size: 0.85rem;
+      color: #666;
+      background: rgba(102, 126, 234, 0.1);
+      padding: 0.25rem 0.5rem;
+      border-radius: 12px;
+      display: inline-block;
+    }
+
+    .expand-icon {
+      font-size: 1.2rem;
+      color: #666;
+      transition: transform 0.3s ease;
+    }
+
+    .connection-card.expanded .expand-icon {
+      transform: rotate(180deg);
+    }
+
+    .connection-details {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .connection-details p {
+      margin: 0.5rem 0;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .connection-links {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .social-link {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .social-link.linkedin {
+      background: #0077b5;
+      color: white;
+    }
+
+    .social-link.website {
+      background: #667eea;
+      color: white;
+    }
+
+    .social-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+
+  <script>
+    function toggleRegisterForm() {
+      const form = document.getElementById('register-form');
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function toggleConnection(card) {
+      const details = card.querySelector('.connection-details');
+      const isExpanded = card.classList.contains('expanded');
+      
+      if (isExpanded) {
+        details.style.display = 'none';
+        card.classList.remove('expanded');
+      } else {
+        details.style.display = 'block';
+        card.classList.add('expanded');
+      }
+    }
+  </script>
+
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>AOS.init();</script>
+
+{% endblock %}

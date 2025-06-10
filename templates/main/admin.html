@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% load static %} 
+
+{% block content %}
+
+  <header class="navbar">
+    <div class="logo">EasyConnect Admin</div>
+    <nav class="nav-links">
+      <a href="{% url 'home' %}">Home</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'logout' %}">Logout</a>
+      {% endif %}
+      <a href="{% url 'create_event' %}" onclick="toggleNewEvent()">Set Up New Event</a>
+    </nav>
+  </header>
+
+  <section class="hero" data-aos="fade-up" style="background: linear-gradient(to right, #f0f4ff, #ffffff); padding: 2rem 1rem;">
+
+    <h1 class="hero-title">Welcome, Admin</h1>
+    <p class="hero-subtitle">Manage your events and view networking insights.</p>
+
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+
+    <!-- Past Events -->
+    <div class="glass-card" data-aos="fade-right">
+      <h2 class="text">Past Events</h2>
+      {% if past_events %}
+        <ul>
+          {% for event in past_events %}
+            <li>
+              <strong>{{ event.name }}</strong> {{ event.date }}
+              <a class="see-more" href="{% url 'event_detail' event.id %}">View Details</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No past events.</p>
+      {% endif %}
+    </div>
+
+    <!-- Upcoming Events -->
+    <div class="glass-card" data-aos="fade-left">
+      <h2>Upcoming Events</h2>
+      {% if upcoming_events %}
+        <ul>
+          {% for event in upcoming_events %}
+            <li>
+              <strong>{{ event.name }}</strong> {{ event.date }}
+              <a class="see-more" href="{% url 'event_detail' event.id %}">View Details</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No upcoming events.</p>
+      {% endif %}
+    </div>
+
+    <!-- New Event Form (Initially Hidden) -->
+    <div id="new-event-form" class="glass-card" style="display: none;" data-aos="zoom-in-up">
+      <h2>🛠️ Set Up New Event</h2>
+      <input type="text" class="form-input large" placeholder="Event Name" />
+      <textarea class="form-input large" placeholder="Event Description"></textarea>
+      <input type="text" class="form-input large" placeholder="Event Location" />
+      <input type="datetime-local" class="form-input large" />
+      <input type="text" class="form-input large" placeholder="Vendor/Booth Names (comma-separated)" />
+
+      <!-- Toggle Panels -->
+      <div class="toggle-panels">
+        <h3>Attendee Info Required</h3>
+        <label><input type="checkbox" checked /> Email</label>
+        <label><input type="checkbox" /> LinkedIn</label>
+        <label><input type="checkbox" /> Personal Website</label>
+        <label><input type="checkbox" /> Slack</label>
+        <label><input type="checkbox" /> Facebook</label>
+        <label><input type="checkbox" /> Instagram</label>
+        <label><input type="checkbox" /> Discord</label>
+
+        <h3>Vendor Info Required</h3>
+        <label><input type="checkbox" checked /> Email</label>
+        <label><input type="checkbox" /> LinkedIn</label>
+        <label><input type="checkbox" /> Organization Website</label>
+        <label><input type="checkbox" /> Slack</label>
+        <label><input type="checkbox" /> Facebook</label>
+        <label><input type="checkbox" /> Instagram</label>
+        <label><input type="checkbox" /> Discord</label>
+      </div>
+
+      <!-- Contact Team -->
+      <h3> Questions for the Team?</h3>
+      <textarea class="form-input large" placeholder="Write your question here..."></textarea>
+      <button class="glow-button" onclick="alert('Message sent with event form attached!')">Send to Team</button>
+    </div>
+  </section>
+
+  <script type="module" src="{% static 'js/dashboard-admin.js' %}"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>AOS.init();</script>
+</body>
+</html>
+
+{% endblock %}
